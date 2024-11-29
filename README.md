@@ -56,11 +56,6 @@ No jogo, você controla uma nave espacial com o objetivo de defender a Terra dos
 
 ---
 
-## 📸 Capturas de tela (futuras implementações)
-**Adicione aqui imagens ou GIFs do jogo em funcionamento assim que ele estiver mais desenvolvido.**
-
----
-
 ## 🚧 Melhorias futuras
 - Implementar níveis com dificuldade progressiva.
 - Adicionar efeitos sonoros e música de fundo.
