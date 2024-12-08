@@ -6,7 +6,7 @@ from utils import SpriteButton, load_and_scale_image
 def dificuldade(screen, main_menu):
     # Carrega a imagem de fundo
     background = pygame.image.load("images/background.png").convert()
-    background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))  # Redimensiona se necessário
+    backgrund = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))  # Redimensiona se necessárioo
 
      # Carregar e redimensionar as imagens dos botões
     btn_facil_img = load_and_scale_image("images/dificuldades/facil.png", button_width, button_height)

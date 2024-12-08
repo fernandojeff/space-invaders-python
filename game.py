@@ -32,7 +32,7 @@ def jogar(screen):
     velocidade_nave = 400 * dificuldade
 
     # Velocidade do tiro
-    velocidade_tiro = 500
+    velocidade_tiro = 1000
 
     # Lista de tiros ativos
     tiros = []
@@ -69,6 +69,22 @@ def jogar(screen):
             tiro[1] < monstro["y"] + 25 and
             tiro[1] + altura_tiro > monstro["y"]
         )
+
+    def reiniciar_monstros():
+        gerenciar_monstros.monstros = [
+            [
+                {
+                    "x": 10 + j * (25 + 12),  # 25 é a largura do monstro, 12 é o espaçamento
+                    "y": 10 + i * (25 + 12)   # 25 é a altura do monstro, 12 é o espaçamento
+                }
+                for j in range(colunas)
+            ]
+            for i in range(linhas)
+        ]
+        gerenciar_monstros.direcao = 1
+
+    # Inicializar monstros
+    reiniciar_monstros()
 
     running = True
     while running:
@@ -147,10 +163,11 @@ def jogar(screen):
         if gerenciar_monstros(screen, linhas, colunas, sprite_monstro, velocidade_monstros, delta_time, y_nave):
             print("Game Over!")
             running = False
-        
+
         # Verificar se todos os monstros foram eliminados
         if not any(gerenciar_monstros.monstros):
             print("Você venceu!")
+            reiniciar_monstros()
             running = False
 
         # Atualizar o display
