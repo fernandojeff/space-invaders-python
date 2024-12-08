@@ -72,6 +72,10 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
         ]
         gerenciar_monstros.direcao = 1 
 
+    # Verificar se a lista de monstros está vazia
+    if not any(gerenciar_monstros.monstros):
+        return False  # Todos os monstros foram eliminados
+
     # Verificar se algum monstro atingiu a parede
     limite_esquerdo = min(monstro["x"] for linha in gerenciar_monstros.monstros for monstro in linha)
     limite_direito = max(monstro["x"] + largura_monstro for linha in gerenciar_monstros.monstros for monstro in linha)

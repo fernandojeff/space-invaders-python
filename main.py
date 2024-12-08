@@ -40,10 +40,10 @@ def main_menu(screen):
 
         for button in buttons:
             button.draw(screen)
-
+  
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                pygame.quit()  
                 sys.exit()
 
             # Lida com eventos de clique para cada botão

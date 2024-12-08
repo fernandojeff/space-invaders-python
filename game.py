@@ -11,7 +11,7 @@ def jogar(screen):
     largura_nave = img_nave.get_width()
     altura_nave = img_nave.get_height()
 
-     # Configurações da matriz de monstros
+    # Configurações da matriz de monstros
     linhas = 5
     colunas = 10
     sprite_monstro = 'images/monstro.png'
@@ -62,6 +62,14 @@ def jogar(screen):
     # Clock para controlar o FPS
     clock = pygame.time.Clock()
 
+    def verificar_colisao(tiro, monstro):
+        return (
+            tiro[0] < monstro["x"] + 25 and
+            tiro[0] + largura_tiro > monstro["x"] and
+            tiro[1] < monstro["y"] + 25 and
+            tiro[1] + altura_tiro > monstro["y"]
+        )
+
     running = True
     while running:
         screen.fill(WHITE)
@@ -90,11 +98,6 @@ def jogar(screen):
         elif x_nave > SCREEN_WIDTH - largura_nave:
             x_nave = SCREEN_WIDTH - largura_nave
 
-        # Gerenciar monstros
-        if gerenciar_monstros(screen, linhas, colunas, sprite_monstro, velocidade_monstros, delta_time, y_nave):
-            print("Game Over!")
-            running = False
-
         # Controle do tiro
         tempo_atual = pygame.time.get_ticks() / 1000  # Tempo em segundos
         if teclas[pygame.K_SPACE] and tempo_atual - ultimo_tiro > tempo_recarga:
@@ -112,6 +115,26 @@ def jogar(screen):
             if tiro[1] < -altura_tiro:  
                 tiros.remove(tiro)
 
+        # Verificar colisões
+        tiros_para_remover = []
+        monstros_para_remover = []
+        for tiro in tiros:
+            for linha in gerenciar_monstros.monstros:
+                for monstro in linha:
+                    if verificar_colisao(tiro, monstro):
+                        tiros_para_remover.append(tiro)
+                        monstros_para_remover.append(monstro)
+                        break
+
+        for tiro in tiros_para_remover:
+            if tiro in tiros:
+                tiros.remove(tiro)
+
+        for monstro in monstros_para_remover:
+            for linha in gerenciar_monstros.monstros:
+                if monstro in linha:
+                    linha.remove(monstro)
+
         # Desenhar a nave e os tiros
         desenha_nave(x_nave, y_nave)
         for tiro in tiros:
@@ -119,6 +142,16 @@ def jogar(screen):
 
         if debug:
             desenha_fps()
+
+        # Gerenciar monstros
+        if gerenciar_monstros(screen, linhas, colunas, sprite_monstro, velocidade_monstros, delta_time, y_nave):
+            print("Game Over!")
+            running = False
+        
+        # Verificar se todos os monstros foram eliminados
+        if not any(gerenciar_monstros.monstros):
+            print("Você venceu!")
+            running = False
 
         # Atualizar o display
         pygame.display.update()
