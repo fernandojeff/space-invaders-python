@@ -6,9 +6,17 @@
 
 ## 🛸 Sobre o jogo
 
-Este é um projeto acadêmico que recria o lendário **Space Invaders** utilizando **Python** e a biblioteca **Pygame**. A proposta é trazer uma experiência nostálgica com algumas adaptações simples, enquanto aplicamos conceitos aprendidos em aula.  
+Este é um projeto acadêmico que recria o lendário **Space Invaders** utilizando **Python** e a biblioteca **Pygame**. A proposta é trazer uma experiência nostálgica com algumas adaptações simp[...]
 
 No jogo, você controla uma nave espacial com o objetivo de defender a Terra dos invasores alienígenas, destruindo o maior número possível antes que eles alcancem a base.
+
+---
+
+## 📅 Diário de Bordo
+| Atualização| Atualização                                                                 |
+|------------|-----------------------------------------------------------------------------|
+| 01         | Primeiro Upload                                                             |
+| 02         | Implementação do tiro e destruição de inimigos                              |
 
 ---
 
@@ -66,7 +74,7 @@ No jogo, você controla uma nave espacial com o objetivo de defender a Terra dos
 ---
 
 ## 💡 Inspiração
-Este projeto foi inspirado no clássico **Space Invaders**, que marcou gerações desde seu lançamento em 1978. Ele está sendo desenvolvido como parte de um trabalho acadêmico do curso de **Ciência da Computação** da **UFF**.
+Este projeto foi inspirado no clássico **Space Invaders**, que marcou gerações desde seu lançamento em 1978. Ele está sendo desenvolvido como parte de um trabalho acadêmico do curso de **Ciênci[...]
 
 ---
 
