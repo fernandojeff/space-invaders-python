@@ -4,9 +4,9 @@ from config import SCREEN_WIDTH, SCREEN_HEIGHT, button_width, button_height
 from utils import SpriteButton, load_and_scale_image
 
 def dificuldade(screen, main_menu):
-    # Carrega a imagem de fundo
+    #Cria imagem do fundo
     background = pygame.image.load("images/background.png").convert()
-    backgrund = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))  # Redimensiona se necessárioo
+    background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))  
 
      # Carregar e redimensionar as imagens dos botões
     btn_facil_img = load_and_scale_image("images/dificuldades/facil.png", button_width, button_height)
@@ -21,10 +21,20 @@ def dificuldade(screen, main_menu):
     btn_voltar = SpriteButton(300, 500, btn_voltar_img, lambda: main_menu(screen))
     buttons = [btn_facil, btn_medio, btn_dificil, btn_voltar]
 
+    #Desenha a imagem de cima
+    def draw_header():
+        header_image = pygame.image.load("images/header.png").convert_alpha()
+
+        header_image = pygame.transform.scale(header_image, (513, 151))
+
+        screen.blit(header_image, (158, 10))
+
     running = True
     while running:
         # Desenha a imagem de fundo
         screen.blit(background, (0, 0))
+
+        draw_header()
 
         # Desenha os botões
         for button in buttons:

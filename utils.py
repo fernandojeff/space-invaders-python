@@ -103,3 +103,16 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
         return True  # Game over
 
     return False  # Jogo continua
+
+def reiniciar_monstros(colunas, linhas):
+    gerenciar_monstros.monstros = [
+        [
+            {
+                "x": 10 + j * (25 + 12),  # 25 é a largura do monstro, 12 é o espaçamento
+                "y": 10 + i * (25 + 12)   # 25 é a altura do monstro, 12 é o espaçamento
+            }
+            for j in range(colunas)
+        ]
+        for i in range(linhas)
+    ]
+    gerenciar_monstros.direcao = 1

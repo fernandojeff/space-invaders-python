@@ -16,7 +16,8 @@ No jogo, você controla uma nave espacial com o objetivo de defender a Terra dos
 | Atualização| Atualização                                                                 |
 |------------|-----------------------------------------------------------------------------|
 | 01         | Primeiro Upload                                                             |
-| 02         | Implementação do tiro e destruição de inimigos                              |
+| 02         | Destruição de inimigos                                                      |
+| 03         | Implementação do tiro dos inimigos                                          |
 
 ---
 
