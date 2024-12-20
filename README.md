@@ -13,11 +13,15 @@ No jogo, você controla uma nave espacial com o objetivo de defender a Terra dos
 ---
 
 ## 📅 Diário de Bordo
-| Atualização| Atualização                                                                 |
-|------------|-----------------------------------------------------------------------------|
-| 01         | Primeiro Upload                                                             |
-| 02         | Destruição de inimigos                                                      |
-| 03         | Implementação do tiro dos inimigos                                          |
+| Atualização | Atualização                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| 01          | Primeiro Upload                                                             |
+| 02          | Destruição de inimigos                                                      |
+| 03          | Implementação do tiro dos inimigos                                          |
+| 04          | Adição do contador de pontuação                                             |
+| 05          | Agora é possível salvar seus pontos ao terminar uma partida                 |
+| 06          | Os pontos e informações dos jogadores são salvos e aparecem no menu ranking |
+| 07          | Sistema de fases: agora, ao matar uma horda, surge outra mais difícil       |
 
 ---
 

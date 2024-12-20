@@ -1,20 +1,53 @@
 import pygame
 import sys
 import random
-from config import WHITE, SCREEN_WIDTH, SCREEN_HEIGHT, dificuldade
-from utils import gerenciar_monstros, reiniciar_monstros
+
+from config import (
+    WHITE, SCREEN_WIDTH, SCREEN_HEIGHT
+)
+from utils import (
+    gerenciar_monstros, reiniciar_monstros, desenha_tiro_monstro, desenha_nave,
+    desenha_tiro, desenha_vidas, desenha_fps, desenhar_pontuacao
+)
+from ranking import perguntar_nome_e_gravar_ranking
+
+
+# Função para finalizar o jogo
+def finalizar_jogo(screen, pontuacao):
+    global running, fase
+    
+    if fase >= 3:
+        print("Você venceu!")
+    else:
+        print("Game Over!")
+
+    perguntar_nome_e_gravar_ranking(pontuacao)
+    
+    fase = 1
+
+    running = False
+    from main import main_menu
+    main_menu(screen)
 
 def jogar(screen):
-    debug = False #True para ativar o FPS
-    
+    debug = False  # True para ativar o FPS
+
     # Carregar imagem da nave
     img_nave = pygame.image.load('images/nave.png')
     largura_nave = img_nave.get_width()
     altura_nave = img_nave.get_height()
 
-    # Configurações da matriz de monstros
+    # Contador de fase
+    fase = 1
+
+    #Varivel de dificuldade
+    dificuldade = 1
+
+    # Quantidade de colunas e linhas iniciais dos monstros
     linhas = 5
     colunas = 10
+
+    # Configurações da matriz de monstros
     sprite_monstro = 'images/monstro.png'
     velocidade_monstros = 60 * dificuldade
 
@@ -41,21 +74,21 @@ def jogar(screen):
     x_nave, y_nave = posicao_inicial_nave  # Definir posição inicial
 
     # Velocidade de movimento da nave
-    velocidade_nave = 400 * dificuldade
+    velocidade_nave = 400 / dificuldade
 
     # Velocidade do tiro
-    velocidade_tiro = 1000
+    velocidade_tiro = 1000 / dificuldade
 
     # Lista de tiros ativos
     tiros = []
     tiros_monstros = []
 
-    # Tempo de recarga do tiro
-    tempo_recarga = 1 / dificuldade
+    # Tempo de recarga do tiro player
+    tempo_recarga = 1 * dificuldade
     ultimo_tiro = 0
 
     # Tempo de recarga dos tiros dos monstros
-    tempo_recarga_monstro = 3.5 * dificuldade # Tempo base de recarga
+    tempo_recarga_monstro = 2 / dificuldade  # Tempo base de recarga
     ultimo_tiro_monstro = 0
 
     # Frame do sprite do tiro 
@@ -63,29 +96,6 @@ def jogar(screen):
     tempo_sprite_tiro = 0.1  # Tempo entre frames (em segundos)
     ultimo_frame = 0
 
-    # Função para desenhar tiros dos monstros
-    def desenha_tiro_monstro(x, y):
-        pygame.draw.rect(screen, (255, 0, 0), (x, y, 5, 15))  # Retângulo vermelho
-
-    def desenha_nave(x, y):
-        screen.blit(img_nave, (x, y))
-
-    def desenha_tiro(x, y, frame):
-        screen.blit(sprites_tiro[frame], (x, y))
-    
-    def desenha_vidas():
-        # Exibir vidas
-        font = pygame.font.SysFont(None, 30)
-        vidas_text = font.render(f"Vidas: {vidas}", True, (255, 255, 255))
-        screen.blit(vidas_text, (10, 10))
-
-    #Desenha o FPS na tela
-    def desenha_fps():
-        font = pygame.font.SysFont(None, 30) #Define fonte e tamanho dela
-        fps = clock.get_fps()
-        fps_text = font.render(f"{fps:.0f}", True, (255, 255, 255))
-        screen.blit(fps_text, (775, 575))
-    
     # Clock para controlar o FPS
     clock = pygame.time.Clock()
 
@@ -108,9 +118,28 @@ def jogar(screen):
         inicio_invencibilidade = pygame.time.get_ticks() / 1000  # Tempo atual
         nave_visivel = True  # Garante que a nave comece visível
 
+    # Função para iniciar uma nova fase
+    def iniciar_nova_fase():
+        nonlocal dificuldade, linhas, colunas, fase
+        fase += 1
+        dificuldade += 0.8  # Aumenta a dificuldade
+        velocidade_monstros = 60 * dificuldade  # Atualiza a velocidade dos monstros
+
+        # Adiciona uma linha e uma coluna a mais nas duas primeiras fases
+        if fase < 3:
+            colunas += 1
+            linhas += 1
+
+        reiniciar_monstros(colunas, linhas)  # Reinicia os monstros
+        return dificuldade, velocidade_monstros, colunas, linhas, fase
+    
+    # Inicializar a pontuação
+    pontuacao = 0
+
     running = True
     while running:
         screen.fill(WHITE)
+        desenhar_pontuacao(screen, pontuacao)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -135,9 +164,8 @@ def jogar(screen):
             x_nave = 0
         elif x_nave > SCREEN_WIDTH - largura_nave:
             x_nave = SCREEN_WIDTH - largura_nave
-        
 
-         # Gerenciar invencibilidade e piscagem
+        # Gerenciar invencibilidade e piscagem
         if invencivel:
             if tempo_atual - inicio_invencibilidade > tempo_invencibilidade:
                 invencivel = False  # Fim da invencibilidade
@@ -149,7 +177,7 @@ def jogar(screen):
 
         # Desenhar a nave (apenas se visível)
         if not invencivel or nave_visivel:
-            desenha_nave(x_nave, y_nave)
+            desenha_nave(screen, img_nave, x_nave, y_nave)
 
         # Verificar colisões com tiros dos monstros
         if not invencivel:
@@ -158,8 +186,7 @@ def jogar(screen):
                     tiros_monstros.remove(tiro)
                     vidas -= 1
                     if vidas == 0:
-                        print("Game Over!")
-                        running = False
+                        finalizar_jogo(screen, pontuacao)
                     else:
                         reiniciar_player()  # Reposicionar e ativar invencibilidade
 
@@ -175,7 +202,7 @@ def jogar(screen):
                 tiros_monstros.append([monstro_atirador["x"], monstro_atirador["y"]])
             ultimo_tiro_monstro = tempo_atual
 
-         # Atualizar posição dos tiros dos monstros
+        # Atualizar posição dos tiros dos monstros
         for tiro in tiros_monstros[:]:
             tiro[1] += 300 * delta_time  # Velocidade do tiro
             if tiro[1] > SCREEN_HEIGHT:
@@ -183,7 +210,7 @@ def jogar(screen):
 
         # Desenhar tiros dos monstros
         for tiro in tiros_monstros:
-            desenha_tiro_monstro(tiro[0], tiro[1])
+            desenha_tiro_monstro(screen, tiro[0], tiro[1])
 
         # Controle do tiro player
         tempo_atual = pygame.time.get_ticks() / 1000  # Tempo em segundos
@@ -211,6 +238,7 @@ def jogar(screen):
                     if verificar_colisao(tiro, monstro):
                         tiros_para_remover.append(tiro)
                         monstros_para_remover.append(monstro)
+                        pontuacao += 10
                         break
 
         for tiro in tiros_para_remover:
@@ -223,23 +251,28 @@ def jogar(screen):
                     linha.remove(monstro)
 
         for tiro in tiros:
-            desenha_tiro(tiro[0], tiro[1], frame_tiro)
+            desenha_tiro(screen, sprites_tiro, tiro[0], tiro[1], frame_tiro)
 
         if debug:
-            desenha_fps()
+            desenha_fps(screen, clock)
+
 
         # Gerenciar monstros
         if gerenciar_monstros(screen, linhas, colunas, sprite_monstro, velocidade_monstros, delta_time, y_nave):
-            print("Game Over!")
-            running = False
+            finalizar_jogo(screen, pontuacao)
+            return
 
         # Verificar se todos os monstros foram eliminados
         if not any(gerenciar_monstros.monstros):
-            print("Você venceu!")
-            reiniciar_monstros()
-            running = False
+            print(f"Fase {fase} concluída! Iniciando fase {fase + 1}...")
+            if fase > 3:
+                finalizar_jogo(screen, pontuacao)
+                return
+            else:
+                iniciar_nova_fase()
 
-        desenha_vidas()
+        desenha_vidas(screen, vidas)
+        desenhar_pontuacao(screen, pontuacao)
 
         # Atualizar o display
         pygame.display.update()

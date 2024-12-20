@@ -85,7 +85,7 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
         gerenciar_monstros.direcao *= -1  # Inverter direção de movimento
         for linha in gerenciar_monstros.monstros:
             for monstro in linha:
-                monstro["y"] += altura_monstro // 2  # Todos os monstros descem um pouco
+                monstro["y"] += altura_monstro // 0.8  # Todos os monstros descem um pouco
 
     # Atualizar posição dos monstros
     for linha in gerenciar_monstros.monstros:
@@ -105,6 +105,7 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
     return False  # Jogo continua
 
 def reiniciar_monstros(colunas, linhas):
+
     gerenciar_monstros.monstros = [
         [
             {
@@ -116,3 +117,33 @@ def reiniciar_monstros(colunas, linhas):
         for i in range(linhas)
     ]
     gerenciar_monstros.direcao = 1
+
+# Função para desenhar tiros dos monstros
+def desenha_tiro_monstro(screen, x, y):
+    pygame.draw.rect(screen, (255, 0, 0), (x, y, 5, 15))  # Retângulo vermelho
+
+def desenha_nave(screen, img_nave, x, y):
+    screen.blit(img_nave, (x, y))
+
+def desenha_tiro(screen, sprites_tiro, x, y, frame):
+    screen.blit(sprites_tiro[frame], (x, y))
+
+def desenha_vidas(screen, vidas):
+    # Exibir vidas
+    font = pygame.font.SysFont(None, 30)
+    vidas_text = font.render(f"Vidas: {vidas}", True, (255, 255, 255))
+    screen.blit(vidas_text, (10, 10))
+
+#Desenha o FPS na tela
+def desenha_fps(screen, clock):
+    font = pygame.font.SysFont(None, 30) #Define fonte e tamanho dela
+    fps = clock.get_fps()
+    fps_text = font.render(f"{fps:.0f}", True, (255, 255, 255))
+    screen.blit(fps_text, (775, 575))
+
+# Função para desenhar a pontuação na tela
+def desenhar_pontuacao(screen, pontuacao):
+    font = pygame.font.Font(None, 36)
+    text = font.render(f"Pontuação: {pontuacao}", True, (255, 255, 255))
+    screen.blit(text, (620, 10))
+

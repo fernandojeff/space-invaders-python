@@ -28,7 +28,7 @@ def main_menu(screen):
     # Criar botões
     btn_jogar = SpriteButton(300, 200, jogar_img, lambda: jogar(screen))
     btn_dificuldade = SpriteButton(300, 300, dificuldade_img, lambda: dificuldade(screen, main_menu))
-    btn_ranking = SpriteButton(300, 400, ranking_img, lambda: ranking(screen))
+    btn_ranking = SpriteButton(300, 400, ranking_img, lambda: ranking(screen, background))
     btn_sair = SpriteButton(300, 500, sair_img, lambda: pygame.quit() or sys.exit())
     buttons = [btn_jogar, btn_dificuldade, btn_ranking, btn_sair]
 
