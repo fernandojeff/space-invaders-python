@@ -22,6 +22,7 @@ No jogo, você controla uma nave espacial com o objetivo de defender a Terra dos
 | 05          | Agora é possível salvar seus pontos ao terminar uma partida                 |
 | 06          | Os pontos e informações dos jogadores são salvos e aparecem no menu ranking |
 | 07          | Sistema de fases: agora, ao matar uma horda, surge outra mais difícil       |
+| 08          | Um dos inimigos é escolhido com boss aleatoriamente                         |
 
 ---
 
