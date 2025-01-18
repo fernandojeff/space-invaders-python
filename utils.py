@@ -1,4 +1,5 @@
 import pygame
+import random
 from config import BLACK, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT
 
 def load_and_scale_image(image_path, width, height):
@@ -41,13 +42,15 @@ def draw_button(screen, text, x, y, width, height, active_color, inactive_color,
         pygame.time.delay(200)  # Evitar múltiplos cliques rápidos
         action()
 
-def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, y_nave):
+def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, y_nave, sprite_boss):
     # Carregar sprite do monstro e redimensionar
     img_monstro_original = pygame.image.load(sprite)
+    img_boss_original = pygame.image.load(sprite_boss)
     largura_desejada = 25  # Tamanho do monstro
     altura_desejada = 25   
     img_monstro = pygame.transform.scale(img_monstro_original, (largura_desejada, altura_desejada))
-    
+    img_boss = pygame.transform.scale(img_boss_original, (largura_desejada, altura_desejada))
+
     largura_monstro = img_monstro.get_width()
     altura_monstro = img_monstro.get_height()
 
@@ -64,13 +67,21 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
             [
                 {
                     "x": margem_inicial + j * (largura_monstro + espacamento_x), 
-                    "y": margem_inicial + i * (altura_monstro + espacamento_y)  
+                    "y": margem_inicial + i * (altura_monstro + espacamento_y),
+                    "boss": False,  # Inicialmente, nenhum monstro é um boss
+                    "vidas": 1  # Monstros normais têm uma vida
                 }
                 for j in range(colunas)
             ]
             for i in range(linhas)
         ]
         gerenciar_monstros.direcao = 1 
+
+        # Escolher um monstro aleatório para ser o boss
+        linha_aleatoria = random.choice(gerenciar_monstros.monstros)
+        monstro_aleatorio = random.choice(linha_aleatoria)
+        monstro_aleatorio["boss"] = True
+        monstro_aleatorio["vidas"] = 2  # Boss tem duas vidas
 
     # Verificar se a lista de monstros está vazia
     if not any(gerenciar_monstros.monstros):
@@ -95,8 +106,11 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
     # Desenhar monstros na tela
     for linha in gerenciar_monstros.monstros:
         for monstro in linha:
-            screen.blit(img_monstro, (monstro["x"], monstro["y"]))
-
+                if monstro["boss"]:
+                    screen.blit(img_boss, (monstro["x"], monstro["y"]))  # Usar sprite do boss
+                else:
+                    screen.blit(img_monstro, (monstro["x"], monstro["y"]))  # Usar sprite normal
+    
     # Verificar fim de jogo
     monstro_mais_baixo = max(monstro["y"] + altura_monstro for linha in gerenciar_monstros.monstros for monstro in linha)
     if monstro_mais_baixo >= y_nave:
@@ -105,18 +119,25 @@ def gerenciar_monstros(screen, linhas, colunas, sprite, velocidade, delta_time, 
     return False  # Jogo continua
 
 def reiniciar_monstros(colunas, linhas):
-
     gerenciar_monstros.monstros = [
         [
             {
                 "x": 10 + j * (25 + 12),  # 25 é a largura do monstro, 12 é o espaçamento
-                "y": 10 + i * (25 + 12)   # 25 é a altura do monstro, 12 é o espaçamento
+                "y": 10 + i * (25 + 12),   # 25 é a altura do monstro, 12 é o espaçamento
+                "boss": False,  # Inicialmente, nenhum monstro é um boss
+                "vidas": 1  # Monstros normais têm uma vida
             }
             for j in range(colunas)
         ]
         for i in range(linhas)
     ]
     gerenciar_monstros.direcao = 1
+
+    # Escolher um monstro aleatório para ser o boss
+    linha_aleatoria = random.choice(gerenciar_monstros.monstros)
+    monstro_aleatorio = random.choice(linha_aleatoria)
+    monstro_aleatorio["boss"] = True
+    monstro_aleatorio["vidas"] = 2  # Boss tem duas vidas
 
 # Função para desenhar tiros dos monstros
 def desenha_tiro_monstro(screen, x, y):
@@ -145,5 +166,5 @@ def desenha_fps(screen, clock):
 def desenhar_pontuacao(screen, pontuacao):
     font = pygame.font.Font(None, 36)
     text = font.render(f"Pontuação: {pontuacao}", True, (255, 255, 255))
-    screen.blit(text, (620, 10))
+    screen.blit(text, (580, 10))
 

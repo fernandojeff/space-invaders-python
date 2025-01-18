@@ -11,6 +11,7 @@ from utils import (
 )
 from ranking import perguntar_nome_e_gravar_ranking
 
+fase = 1
 
 # Função para finalizar o jogo
 def finalizar_jogo(screen, pontuacao):
@@ -37,9 +38,6 @@ def jogar(screen):
     largura_nave = img_nave.get_width()
     altura_nave = img_nave.get_height()
 
-    # Contador de fase
-    fase = 1
-
     #Varivel de dificuldade
     dificuldade = 1
 
@@ -49,6 +47,7 @@ def jogar(screen):
 
     # Configurações da matriz de monstros
     sprite_monstro = 'images/monstro.png'
+    sprite_boss = 'images/boss.png'
     velocidade_monstros = 60 * dificuldade
 
     # Adicionar variáveis para o player
@@ -120,7 +119,8 @@ def jogar(screen):
 
     # Função para iniciar uma nova fase
     def iniciar_nova_fase():
-        nonlocal dificuldade, linhas, colunas, fase
+        global fase
+        nonlocal dificuldade, linhas, colunas
         fase += 1
         dificuldade += 0.8  # Aumenta a dificuldade
         velocidade_monstros = 60 * dificuldade  # Atualiza a velocidade dos monstros
@@ -236,8 +236,16 @@ def jogar(screen):
             for linha in gerenciar_monstros.monstros:
                 for monstro in linha:
                     if verificar_colisao(tiro, monstro):
+                        if monstro["boss"]:
+                            monstro["vidas"] -= 1
+                            if monstro["vidas"] == 1:
+                                monstro["boss"] = False
+                            elif monstro["vidas"] <= 0:
+                                monstros_para_remover.append(monstro)
+                                pontuacao += 10
+                        else:
+                            monstros_para_remover.append(monstro)
                         tiros_para_remover.append(tiro)
-                        monstros_para_remover.append(monstro)
                         pontuacao += 10
                         break
 
@@ -258,7 +266,7 @@ def jogar(screen):
 
 
         # Gerenciar monstros
-        if gerenciar_monstros(screen, linhas, colunas, sprite_monstro, velocidade_monstros, delta_time, y_nave):
+        if gerenciar_monstros(screen, linhas, colunas, sprite_monstro, velocidade_monstros, delta_time, y_nave, sprite_boss):
             finalizar_jogo(screen, pontuacao)
             return
 
